@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+venv/
+.venv/
+env/
+
+# Models (large — regenerate on first run)
+models/*.pkl
+models/*.json
+
+# Dataset (download from Kaggle)
+data/melb_data.csv
+
+# Node / Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/.vercel/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
