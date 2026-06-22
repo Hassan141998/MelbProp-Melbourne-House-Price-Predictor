@@ -21,18 +21,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize services (models train on first run ~30 sec)
-predictor = PricePredictor()
-knn_service = KNNService()
-db_service = DBService()
+predictor    = PricePredictor()
+knn_service  = KNNService()
+db_service   = DBService()
 stats_service = StatsService()
 
 
 class PropertyInput(BaseModel):
     suburb: str
     rooms: int
-    type: str          # h = house, u = unit, t = townhouse
-    method: str        # S, PI, VB, SA, SP
+    type: str
+    method: str
     distance: float
     landsize: float
     building_area: float
@@ -51,7 +50,7 @@ class SuburbCompareInput(BaseModel):
 
 @app.get("/")
 def root():
-    return {"message": "MelbProp API is running", "version": "1.0.0"}
+    return {"message": "MelbProp API running", "version": "1.0.0"}
 
 
 @app.get("/api/health")
@@ -62,31 +61,19 @@ def health():
 @app.post("/api/predict-price")
 async def predict_price(prop: PropertyInput):
     try:
-        result = predictor.predict(prop.dict())
+        result  = predictor.predict(prop.dict())
         similar = knn_service.find_similar(prop.dict(), n=5)
-
         await db_service.save_prediction({
-            "suburb": prop.suburb,
-            "rooms": prop.rooms,
-            "type": prop.type,
-            "distance": prop.distance,
-            "landsize": prop.landsize,
+            "suburb": prop.suburb, "rooms": prop.rooms, "type": prop.type,
+            "distance": prop.distance, "landsize": prop.landsize,
             "building_area": prop.building_area,
             "predicted_price": result["predicted_price"],
-            "latitude": prop.latitude,
-            "longitude": prop.longitude,
+            "latitude": prop.latitude, "longitude": prop.longitude,
         })
-
-        return {
-            **result,
-            "similar_properties": similar,
-            "suburb": prop.suburb,
-            "latitude": prop.latitude,
-            "longitude": prop.longitude,
-        }
+        return {**result, "similar_properties": similar,
+                "suburb": prop.suburb, "latitude": prop.latitude, "longitude": prop.longitude}
     except Exception as e:
-        import traceback
-        traceback.print_exc()
+        import traceback; traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -100,9 +87,8 @@ async def suburb_stats(suburb: str):
 
 @app.post("/api/compare-suburbs")
 async def compare_suburbs(data: SuburbCompareInput):
-    s1 = stats_service.get_suburb_stats(data.suburb1)
-    s2 = stats_service.get_suburb_stats(data.suburb2)
-    return {"suburb1": s1, "suburb2": s2}
+    return {"suburb1": stats_service.get_suburb_stats(data.suburb1),
+            "suburb2": stats_service.get_suburb_stats(data.suburb2)}
 
 
 @app.get("/api/suburbs")
@@ -112,8 +98,7 @@ def list_suburbs():
 
 @app.get("/api/history")
 async def get_history(limit: int = 20):
-    history = await db_service.get_history(limit)
-    return {"history": history}
+    return {"history": await db_service.get_history(limit)}
 
 
 @app.get("/api/price-trends")

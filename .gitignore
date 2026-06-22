@@ -7,11 +7,11 @@ venv/
 .venv/
 env/
 
-# Models (large — regenerate on first run)
+# ML models (large — auto-regenerate on startup)
 models/*.pkl
 models/*.json
 
-# Dataset (download from Kaggle)
+# Dataset (download from Kaggle separately)
 data/melb_data.csv
 
 # Node / Next.js
@@ -25,3 +25,4 @@ frontend/.vercel/
 .idea/
 *.swp
 .DS_Store
+Thumbs.db
