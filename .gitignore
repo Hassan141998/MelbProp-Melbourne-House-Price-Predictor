@@ -1,33 +1,19 @@
-# Python
 __pycache__/
 *.pyc
-*.pyo
 .env
 venv/
 .venv/
-env/
-
-# ML models (large — auto-regenerate on startup)
 models/*.pkl
 models/*.json
-
-# Dataset (download from Kaggle separately)
 data/melb_data.csv
-
-# Node / Next.js
-frontend/node_modules/
-frontend/.next/
-frontend/.vercel/
-*.log
-
-# IDE
-.vscode/
-.idea/
-*.swp
-.DS_Store
-Thumbs.db
-
 node_modules/
 frontend/node_modules/
+.next/
+frontend/.next/
+*.log
 package-lock.json
 frontend/package-lock.json
+.vercel/
+frontend/.vercel/
+.DS_Store
+Thumbs.db
